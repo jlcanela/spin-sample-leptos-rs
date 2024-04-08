@@ -30,11 +30,9 @@ fn main() {
 
 #[component]
 pub fn Home() -> impl IntoView {
-    let auth = expect_context::<Auth>();
-
     view! {
         <Title text="Home"/>
-        <h1>Home1</h1>
+        <h1>Home</h1>
 
         // Your Pome Page without authentication
     }

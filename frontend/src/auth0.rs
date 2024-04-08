@@ -49,11 +49,11 @@ async fn load_config(url: String) -> Result<WebConfig, ConfigError> {
     let res = client.post(url)
     .body("the exact body that is sent")
     .send()
-    .await.map_err(|e| ConfigError::FetchError)?; // issue with request
+    .await.map_err(|_| ConfigError::FetchError)?; // issue with request
     
-    let as_text = res.text().await.map_err(|e| ConfigError::ParseError)?; // Issue with response
+    let as_text = res.text().await.map_err(|_| ConfigError::ParseError)?; // Issue with response
 
-    let config: WebConfig = serde_json::from_str(&as_text).map_err(|e| ConfigError::ParseError)?;
+    let config: WebConfig = serde_json::from_str(&as_text).map_err(|_| ConfigError::ParseError)?;
 
     Ok(config)
 }
