@@ -43,10 +43,10 @@ fn make_auth_params(client_id: String, auth0_domain: String, base_url: String) -
     }
 }
 
-async fn load_config() -> Result<WebConfig, ConfigError> {
+async fn load_config(url: String) -> Result<WebConfig, ConfigError> {
     
     let client = reqwest::Client::new();
-    let res = client.post("http://localhost:3000/api/config")
+    let res = client.post(url)
     .body("the exact body that is sent")
     .send()
     .await.map_err(|e| ConfigError::FetchError)?; // issue with request
@@ -58,8 +58,8 @@ async fn load_config() -> Result<WebConfig, ConfigError> {
     Ok(config)
 }
 
-async fn auth(base_url: String) -> bool {
-    let config = load_config().await;
+async fn auth(base_url: String, config_url: String) -> bool {
+    let config = load_config(config_url).await;
     if config.is_ok() {
         let c = config.unwrap();
         let auth_parameters = make_auth_params(c.client_id.clone(), c.auth0_domain.clone(), base_url);
@@ -73,6 +73,7 @@ async fn auth(base_url: String) -> bool {
 #[component]
 pub fn MakeAuth0(
     base_url: String, 
+    config_url: String,
     children: Box<dyn Fn() -> Fragment>, 
     #[prop(optional, into)] 
     loading: ViewFn) -> impl IntoView
@@ -80,8 +81,7 @@ pub fn MakeAuth0(
   
     let base_url = base_url.clone();
     let config = create_blocking_resource(|| (),  move |_|  { 
-        let bu = base_url.clone();
-        auth(bu) 
+        auth(base_url.clone(), config_url.clone())
     });
     let view = store_value(children);
 

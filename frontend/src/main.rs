@@ -100,23 +100,25 @@ fn base_url() -> String {
 #[component]
 pub fn AppWithRouter() -> impl IntoView {
 
+    let base_url = base_url();
+    let config_url = format!("{}/api/config", base_url);
+
     view! {
         // This is an example for a navbar where you have a login and logout
         // button, based on the state.
-        <MakeAuth0 base_url = base_url() loading = || view! { <div>Loading Config</div>}>
+        <MakeAuth0 base_url = base_url config_url = config_url loading = || view! { <div>Loading Config</div>}>
             <div>
                 <Authenticated unauthenticated=move || {
                     view! {
                         <LoginLink class="text-login">Sign in</LoginLink>
                     }
                 }>
-                    <LogoutLink class="text-logut">Sign Out</LogoutLink>
+                    <LogoutLink class="text-logout">Sign Out</LogoutLink>
                 </Authenticated>
             </div>
             
             <Routes>
-                //<Route path="/" view=move || view! { <Home/> }/>
-                <Route path="/" view=move || view! { <div>Home</div> }/>
+                <Route path="/" view=move || view! { <Home/> }/>
                 
                 // This is an example route for your profile, it will render
                 // loading if it's still loading, render unauthenticated if it's
