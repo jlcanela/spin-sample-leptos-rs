@@ -40,6 +40,7 @@ fn make_auth_params(client_id: String, auth0_domain: String, base_url: String) -
         redirect_uri: redirect_uri,
         post_logout_redirect_uri: post_logout_redirect_uri,
         scope: Some("openid offline_access".to_string()),
+        audience: Some("http://localhost:8080".to_string())
     }
 }
 
